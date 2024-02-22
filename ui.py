@@ -131,8 +131,8 @@ def recursion_options(command, directory):
 def command_E(journal, command: list):
     if len(command) > 1:
         for i in command:
+            index = command.index(i) + 1
             if i == '-usr':
-                index = command.index(i) + 1
                 username = str(command[index]).replace("'", "")
                 username = username.replace('"', '')
                 input_error_check(username, journal)
@@ -144,7 +144,6 @@ def command_E(journal, command: list):
                 print("User profile succeffully updated!")
 
             elif i == '-pwd':
-                index = command.index(i) + 1
                 password = str(command[index]).replace("'", "")
                 password = password.replace('"', '')
                 input_error_check(password, journal)
@@ -156,7 +155,6 @@ def command_E(journal, command: list):
                 print("User profile succeffully updated!")
 
             elif i == '-bio':
-                index = command.index(i) + 1
                 bio = command[index:]
                 bio = ' '.join(bio)
                 bio = bio.replace("'", "")
@@ -170,7 +168,6 @@ def command_E(journal, command: list):
                 print("Profile bio successfully updated!")
 
             elif i == '-addpost':
-                index = command.index(i) + 1
                 entry = command[index:]
                 entry = ' '.join(entry)
                 entry = entry.replace("'", "")
@@ -191,7 +188,6 @@ def command_E(journal, command: list):
                 print("New post successfully added to profile!")
 
             elif i == '-delpost':
-                index = command.index(i) + 1
                 ID = int(command[index]) - 1
                 PROFILE = profile()
                 PROFILE.load_profile(str(journal))
