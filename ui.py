@@ -132,13 +132,13 @@ def command_E(journal, command: list):
     if len(command) > 1:
         for i in command:
             index = command.index(i) + 1
+            PROFILE = profile()
+            PROFILE.load_profile(str(journal))
             if i == '-usr':
                 username = str(command[index]).replace("'", "")
                 username = username.replace('"', '')
                 input_error_check(username, journal)
 
-                PROFILE = profile()
-                PROFILE.load_profile(str(journal))
                 PROFILE.username = username
                 PROFILE.save_profile(str(journal))
                 print("User profile succeffully updated!")
@@ -148,8 +148,6 @@ def command_E(journal, command: list):
                 password = password.replace('"', '')
                 input_error_check(password, journal)
 
-                PROFILE = profile()
-                PROFILE.load_profile(str(journal))
                 PROFILE.password = password
                 PROFILE.save_profile(str(journal))
                 print("User profile succeffully updated!")
@@ -161,8 +159,6 @@ def command_E(journal, command: list):
                 bio = bio.replace('"', '')
                 user_bio_error_check(bio, journal)
 
-                PROFILE = profile()
-                PROFILE.load_profile(str(journal))
                 PROFILE.bio = bio
                 PROFILE.save_profile(str(journal))
                 print("Profile bio successfully updated!")
@@ -181,16 +177,12 @@ def command_E(journal, command: list):
                 POST.entry
                 POST.timestamp
 
-                PROFILE = profile()
-                PROFILE.load_profile(str(journal))
                 PROFILE.add_post(POST)
                 PROFILE.save_profile(str(journal))
                 print("New post successfully added to profile!")
 
             elif i == '-delpost':
                 ID = int(command[index]) - 1
-                PROFILE = profile()
-                PROFILE.load_profile(str(journal))
                 PROFILE.get_posts
                 PROFILE.del_post(ID)
                 PROFILE.save_profile(str(journal))
