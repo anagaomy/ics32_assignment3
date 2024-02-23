@@ -1,119 +1,70 @@
-# ds_protocol.py
-
-# Ana Gao
-# gaomy@uci.edu
-# 26384258
-
-import socket
 import json
 from collections import namedtuple
+from Profile import Post
 
-# Namedtuple to hold the values retrieved from json messages.
-# TODO: update this named tuple to use DSP protocol keys
-Connection = namedtuple('Connection', ['socket','send', 'recv'])
+DataTuple = namedtuple('DataTuple', ['response', 'token'])
 
-def extract_json(json_msg:str) -> Connection:
+def extract_json(json_msg: str) -> DataTuple:
     '''
-    Call the json.loads function on a json string and convert it to a DataTuple object
-  
-    TODO: replace the pseudo placeholder keys with actual DSP protocol keys
+    Parses a JSON string and converts it to a DataTuple object.
     '''
     try:
         json_obj = json.loads(json_msg)
-        foo = json_obj['foo']
-        baz = json_obj['bar']['baz']
+        # print('-------------')
+        # print(json_obj)
+        # print("----------")
+
+        response = json_obj.get('response', {})
+        token = response.get('token', None)
+
+        # print('....respond:', response)
+        print('....token:', token)
+        
+        return DataTuple(response, token)
     except json.JSONDecodeError:
-        print("Json cannot be decoded.")
+        print("JSON cannot be decoded.")
+        return DataTuple({}, None)
 
-    return Connection(foo, baz)
+def join(username, password):
+    '''
+    Formats the join message to follow the DSP protocol.
+    '''
+    join_msg = json.dumps({
+        "join": {
+            "username": username,
+            "password": password,
+            "token": ""
+        }
+    })
+    return join_msg
 
+def post(token, message):
 
-class ProtocolError(Exception):
-    pass
+    '''
+    Formats the post message to follow the DSP protocol.
 
+    '''
+    new_post = Post(entry=message)
+    post_format = json.dumps({
+        "token": token,
+        "post": {
+            "entry": message,
+            "timestamp": new_post.timestamp  
+        }
+    })
+    return post_format
 
-def init(sock:socket) -> Connection:
-    try:
-        f_send = sock.makefile('w')
-        f_recv = sock.makefile('r')
-    except:
-        raise ProtocolError("Invalid socket connection")
+def bio(token, bio):
+    '''
+    Formats the bio message to follow the DSP protocol.
+    '''
 
-    return Connection(
-        socket = sock,
-        send = f_send,
-        recv = f_recv
-    )
-
-
-def disconnect(_conn: Connection):
-    _conn.send.close()
-    _conn.recv.close()
-
-
-def listen(_conn: Connection) -> str:
-    return _read_command(_conn)
-
-
-def error(_conn: Connection):
-    return False
-
-
-def complete(_conn: Connection):
-    _write_command(_conn, str(1))
-
-
-def _write_command(_conn: Connection, cmd: str):
-    try:
-        _conn.send.write(cmd + '\n')
-        _conn.send.flush()
-    except:
-        raise ProtocolError
-    
-
-def send(_conn: Connection, cmd):
-    _write_command(_conn, cmd)
-
-
-def _read_command(_conn: Connection) -> str:
-    cmd = _conn.recv.readline()[:-1]
-    return cmd
-
-
-def start_server(host_address: str, host_port: int):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as srv:
-        srv.bind((host_address, host_port))
-        srv.listen()
-
-        print(f"Server listening on IP: {host_address} and port {host_port}")
-        while True:
-            connection, address = srv.accept()
-
-            with connection:
-                print(f"client connected from {address[0]}")
-                _conn = init(connection)
-
-                while True:
-                    rec_msg = listen(_conn)
-                    if rec_msg == '':
-                        break
-
-                    print("Message received from client: ", rec_msg)
-                    try:
-                        pass
-
-                    except Exception:
-                        print("ERROR")
-                        break
-
-                print("client disconnected")
-
-
-
-
-if __name__ == "__main__":
-    PORT = 3021
-    hostname = socket.gethostname()
-    IPAddr = socket.gethostbyname(hostname)
-    start_server(IPAddr, PORT)
-
+    new_bio = Post(entry=bio)
+    bio_format = json.dumps({
+        "token": token,
+        "bio": {
+            "entry": bio,
+            "timestamp": new_bio.timestamp 
+        }
+    })
+    return bio_format
