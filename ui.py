@@ -30,6 +30,15 @@ def user_bio_error_check(data: str, journal):
             Path(journal).unlink()
             exit()
 
+def user_bio_error_check(data: str, journal):
+    if len(data) == 0:
+        print("Error! Invalid post!")
+        exit()
+    else:
+        if data.isspace():
+            print("Error! Invalid post!")
+            exit()
+
 
 def list_contents(directory):
     myPath = Path(directory)
@@ -141,7 +150,7 @@ def command_E(journal, command: list):
 
                 PROFILE.username = username
                 PROFILE.save_profile(str(journal))
-                print("User profile succeffully updated!")
+                print("Username succeffully updated!")
 
             elif i == '-pwd':
                 password = str(command[index]).replace("'", "")
@@ -150,7 +159,7 @@ def command_E(journal, command: list):
 
                 PROFILE.password = password
                 PROFILE.save_profile(str(journal))
-                print("User profile succeffully updated!")
+                print("User password succeffully updated!")
 
             elif i == '-bio':
                 bio = command[index:]
@@ -168,6 +177,7 @@ def command_E(journal, command: list):
                 entry = ' '.join(entry)
                 entry = entry.replace("'", "")
                 entry = entry.replace('"', '')
+                user_bio_error_check(entry, journal)
 
                 POST = post(entry=entry)
                 POST.set_entry
