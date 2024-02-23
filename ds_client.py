@@ -6,7 +6,7 @@
 
 
 import socket 
-import protocol
+import ds_protocol
 
 
 def send(server:str, port:int, username:str, password:str, message:str, bio:str=None):
@@ -21,25 +21,35 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     :param bio: Optional, a bio for the user.
     '''
     #TODO: return either True or False depending on results of required operation
-    
-    sock = connect_to_server(server, port)
-    if sock == None:
-        print("ERROR")
-        return
-
-    _conn = protocol.init(sock)
 
     try:
+        client = connect_to_server(server, port)
+        if client == None:
+            print("ERROR")
+            return False
         print("Client succeffully connected to " + f"{server} on {port}")
+
         while True:
-            msg = message
-            send.write(msg + "\r\n")
-            send.flush()
+            join_msg = ds_protocol.join(username, password)
+            client.send.write(join_msg.encode())
+            response = client.recv(8000).decode()
+            _type, _token = ds_protocol.extract_json(response)
 
-            srv_msg = msg.readline()[:-1]
-            print("Response received from server: ", srv_msg)
+            if _type == "error":
+                print(response)
+                return False
+            elif _type == "ok":
+                if message and not message.isspace():
+                    post_msg = ds_protocol.post(_token, message)
+                    client.send.write(post_msg.encode())
+                    print(client.recv(8000).decode())
+                
+                if bio and not bio.isspace():
+                    bio_msg = ds_protocol.bio(_token, bio)
+                    client.send.write(bio_msg.encode())
+                    print(client.recv(8000).decode())
 
-            return True
+                return True
             
     except Exception:
         print("ERROR")
