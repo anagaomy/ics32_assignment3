@@ -5,7 +5,7 @@
 # 26384258
 
 
-import ds_client
+import client
 import ui as cmd
 from pathlib import Path
 from Profile import Profile as profile
@@ -276,7 +276,7 @@ def _admin_(command):
 
 
 def main():
-    ds_client
+    client
     print("Welcome! What would you like to do? \n")
     print(INPUT_MAIN_MENU)
     user_input = input()

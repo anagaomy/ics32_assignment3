@@ -1,34 +1,42 @@
+# ds_protocol.py
+
+# Ana Gao
+# gaomy@uci.edu
+# 26384258
+
+import socket
 import json
 from collections import namedtuple
 from Profile import Post
 
-DataTuple = namedtuple('DataTuple', ['response', 'token'])
+# Namedtuple to hold the values retrieved from json messages.
+# TODO: update this named tuple to use DSP protocol keys
+response = namedtuple('response', ['type', 'message', 'token'])
 
-def extract_json(json_msg: str) -> DataTuple:
+def extract_json(json_msg:str) -> response:
     '''
-    Parses a JSON string and converts it to a DataTuple object.
+    Call the json.loads function on a json string and convert it to a DataTuple object
+  
+    TODO: replace the pseudo placeholder keys with actual DSP protocol keys
     '''
     try:
         json_obj = json.loads(json_msg)
-        # print('-------------')
-        # print(json_obj)
-        # print("----------")
-
-        response = json_obj.get('response', {})
-        token = response.get('token', None)
-
-        # print('....respond:', response)
-        print('....token:', token)
-        
-        return DataTuple(response, token)
+        response = json_obj['response']
+        type = response['type']
+        message = response['message']
+        token = response['token']
+        print("token: ", token)
+        return response(type, message, token)
     except json.JSONDecodeError:
-        print("JSON cannot be decoded.")
-        return DataTuple({}, None)
+        print("Json cannot be decoded.")
+        return response(type, message, None)
+
+
+class ProtocolError(Exception):
+    pass
+
 
 def join(username, password):
-    '''
-    Formats the join message to follow the DSP protocol.
-    '''
     join_msg = json.dumps({
         "join": {
             "username": username,
@@ -38,33 +46,26 @@ def join(username, password):
     })
     return join_msg
 
+
 def post(token, message):
-
-    '''
-    Formats the post message to follow the DSP protocol.
-
-    '''
     new_post = Post(entry=message)
-    post_format = json.dumps({
+    post_msg = json.dumps({
         "token": token,
         "post": {
             "entry": message,
             "timestamp": new_post.timestamp  
         }
     })
-    return post_format
+    return post_msg
+
 
 def bio(token, bio):
-    '''
-    Formats the bio message to follow the DSP protocol.
-    '''
-
     new_bio = Post(entry=bio)
-    bio_format = json.dumps({
+    bio_msg = json.dumps({
         "token": token,
         "bio": {
             "entry": bio,
             "timestamp": new_bio.timestamp 
         }
     })
-    return bio_format
+    return bio_msg
