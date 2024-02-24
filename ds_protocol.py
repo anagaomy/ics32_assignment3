@@ -10,7 +10,7 @@ from Profile import Post
 
 # Namedtuple to hold the values retrieved from json messages.
 # TODO: update this named tuple to use DSP protocol keys
-RESPONSE = namedtuple('RESPONSE', ['type', 'token'])
+RESPONSE = namedtuple('RESPONSE', ['type', 'msg', 'token'])
 
 def extract_json(json_msg:str) -> RESPONSE:
     '''
@@ -22,13 +22,14 @@ def extract_json(json_msg:str) -> RESPONSE:
         json_obj = json.loads(json_msg)
         response = json_obj['response']
         type = response['type']
+        msg = response['message']
         token = response['token']
         print("token: ", token)
-        return RESPONSE(type, token)
+        return RESPONSE(type, msg, token)
 
     except json.JSONDecodeError:
         print("Json cannot be decoded.")
-        return RESPONSE(type, None)
+        return RESPONSE(type, msg, None)
 
 
 def join(username, password):

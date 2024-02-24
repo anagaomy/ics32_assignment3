@@ -5,6 +5,7 @@
 # 26384258
 
 
+import json
 import socket 
 import ds_protocol
 
@@ -22,7 +23,7 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     '''
     #TODO: return either True or False depending on results of required operation
 
-    while True:
+    try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
             client.connect((server, port))        
             if client == None:
@@ -33,26 +34,36 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
             join_msg = ds_protocol.join(username, password)
             client.sendall(join_msg.encode())
             response = client.recv(8000).decode()
-            _type, _token = ds_protocol.extract_json(response)
+            _type, msg, _token = ds_protocol.extract_json(response)
 
             if _type == "error":
-                print(response)
+                print(msg)
                 return False
 
             elif _type == "ok":
-                if message and not message.isspace():
+                if message and not message == '' and not message.isspace():
                     post_msg = ds_protocol.post(_token, message)
                     client.sendall(post_msg.encode())
-                    print(client.recv(8000).decode())
+                    MSG = client.recv(8000).decode()
+                    msg = json.loads(MSG)['response']['message']
+                    print(msg)
+                else:
+                    print("ERROR! INVALID POST MESSAGE!")
+                    return False
                 
-                if bio and not bio.isspace():
+                if bio and not bio == '' and not bio.isspace():
                     bio_msg = ds_protocol.bio(_token, bio)
                     client.sendall(bio_msg.encode())
-                    print(client.recv(8000).decode())
+                    MSG = client.recv(8000).decode()
+                    msg = json.loads(MSG)['response']['message']
+                    print(msg)
+                else:
+                    print("ERROR! INVALID BIO!")
+                    return False
 
                 return True
             
-    #except Exception:
+    except Exception:
         print("ERROR")
         return False
 
@@ -61,15 +72,16 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 if __name__ == "__main__":
     username = "BLACKPINK"
     password = "2016"
-    message = "KILL THIS LOVE"
+    message = "HI"
     bio = "I AM A HUGE KPOP FAN"    
-    #server = "168.235.86.101"
-    #port = 3021
-    server = str(input("Enter server IP address   : "))
-    port = int(input("Enter server port         : "))
+    server = "168.235.86.101"
+    port = 3021
+    #server = str(input("Enter server IP address   : "))
+    #port = int(input("Enter server port         : "))
 
     if send(server, port, username, password, message, bio):
         print("Operation completed")
     else:
         print("Operation failed")
+        exit()
     

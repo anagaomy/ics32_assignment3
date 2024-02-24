@@ -9,14 +9,16 @@ import client
 import ui as cmd
 from pathlib import Path
 from Profile import Profile as profile
+from ds_client import send
+
 
 # input/output messages
 INPUT_C = "Great! What is the name of the journal you would to create? \n"
 INPUT_O = "Great! What is the name of the journal you would to open? \n"
-INPUT_MAIN_MENU = " C - Create a new file \n O - Open an existing file \n R - Read file \n D - Delete file \n Q - Quit \n"
+INPUT_MAIN_MENU = " PO  - Publish online \n C   - Create a new file \n O   - Open an existing file \n R   - Read file \n D   - Delete file \n Q   - Quit \n"
 INPUT_COMMAND_MENU = " E - Edit file \n P - Print data in file \n Q - Quit \n"
-COMMAND_E = " -usr [USERNAME] \n -pwd [PASSWORD] \n -bio [BIO] \n -addpost [NEW POST] \n -delpost [ID] \n"
-COMMAND_P = " -usr \n -pwd \n -bio \n -posts \n -post [ID] \n -all \n"
+COMMAND_E = " -usr [USERNAME] \n -pwd [PASSWORD] \n -bio [BIO] \n -addpost [NEW POST] \n -delpost [ID] \n -publish \n"
+COMMAND_P = " -usr \n -pwd \n -bio \n -posts \n -post [ID] \n -all \n -publish \n"
 MSG_C_SUCCESS = "\nNew journal successfully created! \n"
 MSG_O_SUCCESS = "Journal is loading successfully! \n"
 USRNAME_INPUT = "Enter your username (please do NOT contain whitespace): \n"
@@ -183,6 +185,10 @@ def user_interface(command: str):
         else:
             UI_new_commands(journal)
 
+    elif command == "PO":
+        publish_online()
+
+
     elif command == "L":
         _admin_(list)
 
@@ -287,6 +293,24 @@ def main():
         _admin_(command)
     else:
         user_interface(user_input)
+
+
+def publish_online():
+    port = 3021
+    server = str(input("Enter a server IP address: "))
+    username = str(input("Enter your username: ")) #168.235.86.101
+    password = str(input("Enter your password: "))
+    bio_option = str(input("Would you like to add a bio? (y/n) "))
+    if bio_option == 'y':
+        bio = str(input("Enter your bio: "))
+    elif bio_option == 'n':
+        bio = None
+    else:
+        print("NO BIO")
+        bio = None
+    message = str(input("Enter a post message: "))
+    send(server, port, username, password, message, bio)
+
 
 
 if __name__ == "__main__":
