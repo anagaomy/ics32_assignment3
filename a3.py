@@ -17,7 +17,7 @@ INPUT_C = "Great! What is the name of the journal you would to create? \n"
 INPUT_O = "Great! What is the name of the journal you would to open? \n"
 INPUT_MAIN_MENU = " PO  - Publish online \n C   - Create a new file \n O   - Open an existing file \n R   - Read file \n D   - Delete file \n Q   - Quit \n"
 INPUT_COMMAND_MENU = " E - Edit file \n P - Print data in file \n Q - Quit \n"
-COMMAND_E = " -usr [USERNAME] \n -pwd [PASSWORD] \n -bio [BIO] \n -addpost [NEW POST] \n -delpost [ID] \n -publish \n"
+COMMAND_E = " -svr [SERVER] \n -usr [USERNAME] \n -pwd [PASSWORD] \n -bio [BIO] \n -addpost [NEW POST] \n -delpost [ID] \n -publish \n"
 COMMAND_P = " -usr \n -pwd \n -bio \n -posts \n -post [ID] \n -all \n -publish \n"
 MSG_C_SUCCESS = "\nNew journal successfully created! \n"
 MSG_O_SUCCESS = "Journal is loading successfully! \n"
@@ -188,7 +188,6 @@ def user_interface(command: str):
     elif command == "PO":
         publish_online()
 
-
     elif command == "L":
         _admin_(list)
 
@@ -281,20 +280,6 @@ def _admin_(command):
         _admin_(command)
 
 
-def main():
-    client
-    print("Welcome! What would you like to do? \n")
-    print(INPUT_MAIN_MENU)
-    user_input = input()
-    if user_input == "admin":
-        print("You are successfully in ADMIN mode!")
-        print("What would you like to do? ")
-        command = input().strip().split()
-        _admin_(command)
-    else:
-        user_interface(user_input)
-
-
 def publish_online():
     port = 3021
     server = str(input("Enter a server IP address: "))
@@ -311,6 +296,19 @@ def publish_online():
     message = str(input("Enter a post message: "))
     send(server, port, username, password, message, bio)
 
+
+def main():
+    client
+    print("Welcome! What would you like to do? \n")
+    print(INPUT_MAIN_MENU)
+    user_input = input()
+    if user_input == "admin":
+        print("You are successfully in ADMIN mode!")
+        print("What would you like to do? ")
+        command = input().strip().split()
+        _admin_(command)
+    else:
+        user_interface(user_input)
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ from pathlib import Path
 import pathlib
 from Profile import Profile as profile
 from Profile import Post as post
+from ds_client import send
 
 
 def input_error_check(data: str, journal):
@@ -30,7 +31,7 @@ def user_bio_error_check(data: str, journal):
             Path(journal).unlink()
             exit()
 
-def user_bio_error_check(data: str, journal):
+def user_post_error_check(data: str):
     if len(data) == 0:
         print("Error! Invalid post!")
         exit()
@@ -143,7 +144,15 @@ def command_E(journal, command: list):
             index = command.index(i) + 1
             PROFILE = profile()
             PROFILE.load_profile(str(journal))
-            if i == '-usr':
+            if i == 'svr':
+                server = str(command[index]).replace("'", "")
+                server = server.replace('"', '')
+                input_error_check(server, journal)
+                PROFILE.dsuserver = server
+                PROFILE.save_profile(str(journal))
+                print("DSUserver successfully updated!")
+
+            elif i == '-usr':
                 username = str(command[index]).replace("'", "")
                 username = username.replace('"', '')
                 input_error_check(username, journal)
@@ -177,7 +186,7 @@ def command_E(journal, command: list):
                 entry = ' '.join(entry)
                 entry = entry.replace("'", "")
                 entry = entry.replace('"', '')
-                user_bio_error_check(entry, journal)
+                user_post_error_check(entry, journal)
 
                 POST = post(entry=entry)
                 POST.set_entry
@@ -335,3 +344,15 @@ def read_file(command):
                         print(line)
         except FileNotFoundError:
             print("ERROR")
+
+
+def publish_from_file(journal):
+    PROFILE = profile()
+    PROFILE.load_profile(str(journal))
+    port = 3021
+    server = PROFILE.dsuserver
+    username = PROFILE.username
+    password = PROFILE.password
+    bio = PROFILE.bio
+    message = PROFILE._posts[-1]['entry']
+    send(server, port, username, password, message, bio)
