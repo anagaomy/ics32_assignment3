@@ -9,7 +9,6 @@ from collections import namedtuple
 from Profile import Post
 
 # Namedtuple to hold the values retrieved from json messages.
-# TODO: update this named tuple to use DSP protocol keys
 RESPONSE = namedtuple('RESPONSE', ['type', 'msg', 'token'])
 
 def extract_json(json_msg:str) -> RESPONSE:

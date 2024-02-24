@@ -5,7 +5,6 @@
 # 26384258
 
 
-import client
 import ui as cmd
 from pathlib import Path
 from Profile import Profile as profile
@@ -99,17 +98,18 @@ def UI_new_commands(journal):
                 post_ID = input(POST_ID_UPD)
                 list.append(post_ID)
             elif option == '-publish':
-                cmd.publish_from_file(journal)
+                ID = -1
+                cmd.publish_from_file(journal, ID)
             else:
                 print("Error! Invalid command!")
                 exit()
-            #try:
-            cmd.command_E(journal, list)
-            #except Exception:
-                #print("ERROR")
-        #else:
-            #print("ERROR")
-            #exit()
+            try:
+                cmd.command_E(journal, list)
+            except Exception:
+                print("ERROR")
+        else:
+            print("ERROR")
+            exit()
 
     elif command == 'P':
         print("Great! Which option do you want to choose? \n")
@@ -129,16 +129,20 @@ def UI_new_commands(journal):
                 list.append(option)
                 post = input("Great! Which post do you want to print? \n")
                 list.append(post)
-                try:
-                    cmd.command_P(journal, list)
-                except Exception:
-                    print("ERROR")
+            elif option == '-publish':
+                list.append(option)
+                post = input("Great! Which post do you want to publish? \n")
+                list.append(post)
             else:
                 list.append(option)
                 try:
                     cmd.command_P(journal, list)
                 except Exception:
                     print("ERROR")
+            try:
+                cmd.command_P(journal, list)
+            except Exception:
+                print("ERROR")
 
         else:
             print("ERROR")
@@ -289,8 +293,8 @@ def _admin_(command):
 
 def publish_online():
     port = 3021
-    server = str(input("Enter a server IP address: "))
-    username = str(input("Enter your username: ")) #168.235.86.101
+    server = str(input("Enter a server IP address: ")) #168.235.86.101
+    username = str(input("Enter your username: "))
     password = str(input("Enter your password: "))
     bio_option = str(input("Would you like to add a bio? (y/n) "))
     if bio_option == 'y':
@@ -311,7 +315,6 @@ def publish_online():
 
 
 def main():
-    client
     print("Welcome! What would you like to do? \n")
     print(INPUT_MAIN_MENU)
     user_input = input()
@@ -325,7 +328,7 @@ def main():
 
 
 if __name__ == "__main__":
-    #try:
+    try:
         main()
-    #except Exception:
-        #print("Uh oh, there is an error occured!")
+    except Exception:
+        print("Uh oh, there is an error occured!")

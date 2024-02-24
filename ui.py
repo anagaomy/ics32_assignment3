@@ -209,7 +209,8 @@ def command_E(journal, command: list):
                 print("Selected post successfully deleted from profile!")
 
             elif i == '-publish':
-                publish_from_file(journal)
+                ID = -1
+                publish_from_file(journal, ID)
             
             elif i == 'Q':
                 exit()
@@ -257,6 +258,11 @@ def command_P(journal, command: list):
                 count = len(PROFILE._posts)
                 for post in range(count):
                     print(f"Post {post+1}: {PROFILE._posts[post]["entry"]}")
+            
+            elif j == '-publish':
+                index = command.index(j) + 1
+                ID = int(command[index]) - 1
+                publish_from_file(journal, ID)
 
             elif j == 'Q':
                 exit()
@@ -350,7 +356,7 @@ def read_file(command):
             print("ERROR")
 
 
-def publish_from_file(journal):
+def publish_from_file(journal, post_ID):
     PROFILE = profile()
     PROFILE.load_profile(str(journal))
     port = 3021
@@ -358,7 +364,7 @@ def publish_from_file(journal):
     username = str(PROFILE.username)
     password = str(PROFILE.password)
     bio = str(PROFILE.bio)
-    message = str(PROFILE._posts[-1]['entry'])
+    message = str(PROFILE._posts[post_ID]['entry'])
 
     if send(server, port, username, password, message, bio):
         print("Operation completed successfully!")

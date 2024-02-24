@@ -21,10 +21,8 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     :param message: The message to be sent to the server.
     :param bio: Optional, a bio for the user.
     '''
-    #TODO: return either True or False depending on results of required operation
 
-    while True:
-    #try:
+    try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
             client.connect((server, port))        
             if client == None:
@@ -64,25 +62,25 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 
                 return True
             
-    #except Exception:
-        #print("ERROR")
-        #return False
+    except Exception:
+        print("ERROR")
+        return False
 
 
 
-if __name__ == "__main__":
-    username = "ALBUM"
-    password = "123"
-    message = "HI"
-    bio = "cooool"    
-    server = "168.235.86.101"
-    port = 3021
+#if __name__ == "__main__":
+    #username = "ALBUM"
+    #password = "123"
+    #message = "HI"
+    #bio = "cooool"    
+    #server = "168.235.86.101"
+    #port = 3021
     #server = str(input("Enter server IP address   : "))
     #port = int(input("Enter server port         : "))
 
-    if send(server, port, username, password, message, bio):
-        print("Operation completed")
-    else:
-        print("Operation failed")
-        exit()
+    #if send(server, port, username, password, message, bio):
+        #print("Operation completed")
+    #else:
+        #print("Operation failed")
+        #exit()
     
