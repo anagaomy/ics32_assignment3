@@ -4,16 +4,15 @@
 # gaomy@uci.edu
 # 26384258
 
-import socket
 import json
 from collections import namedtuple
 from Profile import Post
 
 # Namedtuple to hold the values retrieved from json messages.
 # TODO: update this named tuple to use DSP protocol keys
-response = namedtuple('response', ['type', 'message', 'token'])
+RESPONSE = namedtuple('RESPONSE', ['type', 'token'])
 
-def extract_json(json_msg:str) -> response:
+def extract_json(json_msg:str) -> RESPONSE:
     '''
     Call the json.loads function on a json string and convert it to a DataTuple object
   
@@ -23,17 +22,13 @@ def extract_json(json_msg:str) -> response:
         json_obj = json.loads(json_msg)
         response = json_obj['response']
         type = response['type']
-        message = response['message']
         token = response['token']
         print("token: ", token)
-        return response(type, message, token)
+        return RESPONSE(type, token)
+
     except json.JSONDecodeError:
         print("Json cannot be decoded.")
-        return response(type, message, None)
-
-
-class ProtocolError(Exception):
-    pass
+        return RESPONSE(type, None)
 
 
 def join(username, password):

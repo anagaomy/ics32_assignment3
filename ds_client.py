@@ -22,56 +22,51 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     '''
     #TODO: return either True or False depending on results of required operation
 
-    try:
-        client = connect_to_server(server, port)
-        if client == None:
-            print("ERROR")
-            return False
-        print("Client succeffully connected to " + f"{server} on {port}")
+    while True:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
+            client.connect((server, port))        
+            if client == None:
+                print("ERROR")
+                return False
+            print("Client succeffully connected to " + f"{server} on {port}")
 
-        while True:
             join_msg = ds_protocol.join(username, password)
-            client.send.write(join_msg.encode())
+            client.sendall(join_msg.encode())
             response = client.recv(8000).decode()
             _type, _token = ds_protocol.extract_json(response)
 
             if _type == "error":
                 print(response)
                 return False
+
             elif _type == "ok":
                 if message and not message.isspace():
                     post_msg = ds_protocol.post(_token, message)
-                    client.send.write(post_msg.encode())
+                    client.sendall(post_msg.encode())
                     print(client.recv(8000).decode())
                 
                 if bio and not bio.isspace():
                     bio_msg = ds_protocol.bio(_token, bio)
-                    client.send.write(bio_msg.encode())
+                    client.sendall(bio_msg.encode())
                     print(client.recv(8000).decode())
 
                 return True
             
-    except Exception:
+    #except Exception:
         print("ERROR")
         return False
 
 
-def connect_to_server(server, port):
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
-            client.connect((server, port))
-            return client
-    except:
-        return None
-
 
 if __name__ == "__main__":
-    username = "blackpink"
-    password = "123"
-    message = "blackpink in your area!!"
-    bio = "yoooooo"    
-    server = input("Enter server IP address   : ")
-    port = input("Enter server port         : ")
+    username = "BLACKPINK"
+    password = "2016"
+    message = "KILL THIS LOVE"
+    bio = "I AM A HUGE KPOP FAN"    
+    #server = "168.235.86.101"
+    #port = 3021
+    server = str(input("Enter server IP address   : "))
+    port = int(input("Enter server port         : "))
 
     if send(server, port, username, password, message, bio):
         print("Operation completed")
