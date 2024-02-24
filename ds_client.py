@@ -57,6 +57,8 @@ def send(server: str, port: int, username: str,
                     MSG = client.recv(8000).decode()
                     msg = json.loads(MSG)['response']['message']
                     print(msg)
+                elif bio is None:
+                    return True
                 else:
                     print("ERROR! INVALID BIO!")
                     return False

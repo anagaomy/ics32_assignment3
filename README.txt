@@ -11,6 +11,10 @@ while you add new features to support basic journaling and journal management fu
 The File System Inspector should have a fully functional command line program that allows user to 
 find, create, read, and delete files on your computer.
 
+Also, this program will allow the user to publish individual posts to a remote server where 
+others can read what they have to say. The journal entries will be stored locally (on the computer) 
+with an option to be shared on the Internet, any server that supports the ICS32 DSP. 
+
 To use this tool, simply enter a command and specify the directory or file you wish to inspect. 
 
 The program should enter into administrator mode when receiving the user input 'admin'. 
