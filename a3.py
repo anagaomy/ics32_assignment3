@@ -14,10 +14,27 @@ from ds_client import send
 # input/output messages
 INPUT_C = "Great! What is the name of the journal you would like to create? \n"
 INPUT_O = "Great! What is the name of the journal you would like to open? \n"
-INPUT_MAIN_MENU = " PO  - Publish online \n C   - Create a new file \n O   - Open an existing file \n R   - Read file \n D   - Delete file \n Q   - Quit \n"
+INPUT_MAIN_MENU = (" PO  - Publish online \n"
+                   " C   - Create a new file \n"
+                   " O   - Open an existing file \n"
+                   " R   - Read file \n"
+                   " D   - Delete file \n"
+                   " Q   - Quit \n")
 INPUT_COMMAND_MENU = " E - Edit file \n P - Print data in file \n Q - Quit \n"
-COMMAND_E = " -svr [SERVER IP ADDRESS] \n -usr [USERNAME] \n -pwd [PASSWORD] \n -bio [BIO] \n -addpost [NEW POST] \n -delpost [ID] \n -publish \n"
-COMMAND_P = " -usr \n -pwd \n -bio \n -posts \n -post [ID] \n -all \n -publish \n"
+COMMAND_E = (" -svr [SERVER IP ADDRESS] \n"
+             " -usr [USERNAME] \n"
+             " -pwd [PASSWORD] \n"
+             " -bio [BIO] \n"
+             " -addpost [NEW POST] \n"
+             " -delpost [ID] \n"
+             " -publish \n")
+COMMAND_P = (" -usr \n"
+             " -pwd \n"
+             " -bio \n"
+             " -posts \n"
+             " -post [ID]"
+             " \n -all \n"
+             " -publish \n")
 MSG_C_SUCCESS = "\nNew journal successfully created! \n"
 MSG_O_SUCCESS = "Journal is loading successfully! \n"
 USRNAME_INPUT = "Enter your username (please do NOT contain whitespace): \n"
@@ -293,7 +310,7 @@ def _admin_(command):
 
 def publish_online():
     port = 3021
-    server = str(input("Enter a server IP address: ")) #168.235.86.101
+    server = str(input("Enter a server IP address: "))  # 168.235.86.101
     username = str(input("Enter your username: "))
     password = str(input("Enter your password: "))
     bio_option = str(input("Would you like to add a bio? (y/n) "))
@@ -311,7 +328,7 @@ def publish_online():
         exit()
     else:
         print("Oops! Operation failed!")
-        exit()       
+        exit()
 
 
 def main():

@@ -6,11 +6,12 @@
 
 
 import json
-import socket 
+import socket
 import ds_protocol
 
 
-def send(server:str, port:int, username:str, password:str, message:str, bio:str=None):
+def send(server: str, port: int, username: str,
+         password: str, message: str, bio: str = None):
     '''
     The send function joins a ds server and sends a message, bio, or both
 
@@ -24,8 +25,8 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
-            client.connect((server, port))        
-            if client == None:
+            client.connect((server, port))
+            if client is None:
                 print("Error! Fail to connect to the server!")
                 return False
             print("Client succeffully connected to " + f"{server} on {port}")
@@ -49,7 +50,7 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
                 else:
                     print("ERROR! INVALID POST MESSAGE!")
                     return False
-                
+
                 if bio and not bio == '' and not bio.isspace():
                     bio_msg = ds_protocol.bio(_token, bio)
                     client.sendall(bio_msg.encode())
@@ -61,26 +62,24 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
                     return False
 
                 return True
-            
+
     except Exception:
         print("ERROR")
         return False
 
 
+# if __name__ == "__main__":
+    # username = "ALBUM"
+    # password = "123"
+    # message = "HI"
+    # bio = "cooool"
+    # server = "168.235.86.101"
+    # port = 3021
+    # server = str(input("Enter server IP address   : "))
+    # port = int(input("Enter server port         : "))
 
-#if __name__ == "__main__":
-    #username = "ALBUM"
-    #password = "123"
-    #message = "HI"
-    #bio = "cooool"    
-    #server = "168.235.86.101"
-    #port = 3021
-    #server = str(input("Enter server IP address   : "))
-    #port = int(input("Enter server port         : "))
-
-    #if send(server, port, username, password, message, bio):
-        #print("Operation completed")
-    #else:
-        #print("Operation failed")
-        #exit()
-    
+    # if send(server, port, username, password, message, bio):
+        # print("Operation completed")
+    # else:
+        # print("Operation failed")
+        # exit()

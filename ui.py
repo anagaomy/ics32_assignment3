@@ -31,6 +31,7 @@ def user_bio_error_check(data: str, journal):
             Path(journal).unlink()
             exit()
 
+
 def user_post_error_check(data: str):
     if len(data) == 0:
         print("Error! Invalid post!")
@@ -211,7 +212,7 @@ def command_E(journal, command: list):
             elif i == '-publish':
                 ID = -1
                 publish_from_file(journal, ID)
-            
+
             elif i == 'Q':
                 exit()
 
@@ -258,7 +259,7 @@ def command_P(journal, command: list):
                 count = len(PROFILE._posts)
                 for post in range(count):
                     print(f"Post {post+1}: {PROFILE._posts[post]["entry"]}")
-            
+
             elif j == '-publish':
                 index = command.index(j) + 1
                 ID = int(command[index]) - 1

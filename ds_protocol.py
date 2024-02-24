@@ -11,10 +11,12 @@ from Profile import Post
 # Namedtuple to hold the values retrieved from json messages.
 RESPONSE = namedtuple('RESPONSE', ['type', 'msg', 'token'])
 
-def extract_json(json_msg:str) -> RESPONSE:
+
+def extract_json(json_msg: str) -> RESPONSE:
     '''
-    Call the json.loads function on a json string and convert it to a DataTuple object
-  
+    Call the json.loads function on a json string
+    and convert it to a DataTuple object
+
     TODO: replace the pseudo placeholder keys with actual DSP protocol keys
     '''
     try:
@@ -48,7 +50,7 @@ def post(token, message):
         "token": token,
         "post": {
             "entry": message,
-            "timestamp": new_post.timestamp  
+            "timestamp": new_post.timestamp
         }
     })
     return post_msg
@@ -60,7 +62,7 @@ def bio(token, bio):
         "token": token,
         "bio": {
             "entry": bio,
-            "timestamp": new_bio.timestamp 
+            "timestamp": new_bio.timestamp
         }
     })
     return bio_msg
