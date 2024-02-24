@@ -23,21 +23,22 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     '''
     #TODO: return either True or False depending on results of required operation
 
-    try:
+    while True:
+    #try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
             client.connect((server, port))        
             if client == None:
-                print("ERROR")
+                print("Error! Fail to connect to the server!")
                 return False
             print("Client succeffully connected to " + f"{server} on {port}")
 
             join_msg = ds_protocol.join(username, password)
             client.sendall(join_msg.encode())
             response = client.recv(8000).decode()
-            _type, msg, _token = ds_protocol.extract_json(response)
+            _type, _msg, _token = ds_protocol.extract_json(response)
 
             if _type == "error":
-                print(msg)
+                print(_msg)
                 return False
 
             elif _type == "ok":
@@ -63,17 +64,17 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 
                 return True
             
-    except Exception:
-        print("ERROR")
-        return False
+    #except Exception:
+        #print("ERROR")
+        #return False
 
 
 
 if __name__ == "__main__":
-    username = "BLACKPINK"
-    password = "2016"
+    username = "ALBUM"
+    password = "123"
     message = "HI"
-    bio = "I AM A HUGE KPOP FAN"    
+    bio = "cooool"    
     server = "168.235.86.101"
     port = 3021
     #server = str(input("Enter server IP address   : "))

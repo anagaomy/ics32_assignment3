@@ -13,16 +13,17 @@ from ds_client import send
 
 
 # input/output messages
-INPUT_C = "Great! What is the name of the journal you would to create? \n"
-INPUT_O = "Great! What is the name of the journal you would to open? \n"
+INPUT_C = "Great! What is the name of the journal you would like to create? \n"
+INPUT_O = "Great! What is the name of the journal you would like to open? \n"
 INPUT_MAIN_MENU = " PO  - Publish online \n C   - Create a new file \n O   - Open an existing file \n R   - Read file \n D   - Delete file \n Q   - Quit \n"
 INPUT_COMMAND_MENU = " E - Edit file \n P - Print data in file \n Q - Quit \n"
-COMMAND_E = " -svr [SERVER] \n -usr [USERNAME] \n -pwd [PASSWORD] \n -bio [BIO] \n -addpost [NEW POST] \n -delpost [ID] \n -publish \n"
+COMMAND_E = " -svr [SERVER IP ADDRESS] \n -usr [USERNAME] \n -pwd [PASSWORD] \n -bio [BIO] \n -addpost [NEW POST] \n -delpost [ID] \n -publish \n"
 COMMAND_P = " -usr \n -pwd \n -bio \n -posts \n -post [ID] \n -all \n -publish \n"
 MSG_C_SUCCESS = "\nNew journal successfully created! \n"
 MSG_O_SUCCESS = "Journal is loading successfully! \n"
 USRNAME_INPUT = "Enter your username (please do NOT contain whitespace): \n"
 PWD_INPUT = "Enter your password (please do Not contain whitespace): \n"
+SVR_UPD = "Great! What is the server IP address? \n"
 USRNAME_UPD = "Great! What is the username that you want to update? \n"
 PSW_UPD = "Great! What is the password that you want to update? \n"
 BIO_UPDATE = "Great! What is the bio that you want to update? \n"
@@ -73,7 +74,11 @@ def UI_new_commands(journal):
         elif len(option) == 1:
             list = []
             option = ''.join(option)
-            if option == '-usr':
+            if option == '-svr':
+                list.append(option)
+                server = str(input(SVR_UPD))
+                list.append(server)
+            elif option == '-usr':
                 list.append(option)
                 username = input(USRNAME_UPD)
                 list.append(username)
@@ -93,16 +98,18 @@ def UI_new_commands(journal):
                 list.append(option)
                 post_ID = input(POST_ID_UPD)
                 list.append(post_ID)
+            elif option == '-publish':
+                cmd.publish_from_file(journal)
             else:
                 print("Error! Invalid command!")
                 exit()
-            try:
-                cmd.command_E(journal, list)
-            except Exception:
-                print("ERROR")
-        else:
-            print("ERROR")
-            exit()
+            #try:
+            cmd.command_E(journal, list)
+            #except Exception:
+                #print("ERROR")
+        #else:
+            #print("ERROR")
+            #exit()
 
     elif command == 'P':
         print("Great! Which option do you want to choose? \n")
@@ -294,7 +301,13 @@ def publish_online():
         print("NO BIO")
         bio = None
     message = str(input("Enter a post message: "))
-    send(server, port, username, password, message, bio)
+
+    if send(server, port, username, password, message, bio):
+        print("Operation completed successfully!")
+        exit()
+    else:
+        print("Oops! Operation failed!")
+        exit()       
 
 
 def main():
@@ -312,7 +325,7 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
+    #try:
         main()
-    except Exception:
-        print("Uh oh, there is an error occured!")
+    #except Exception:
+        #print("Uh oh, there is an error occured!")

@@ -144,10 +144,11 @@ def command_E(journal, command: list):
             index = command.index(i) + 1
             PROFILE = profile()
             PROFILE.load_profile(str(journal))
-            if i == 'svr':
+            if i == '-svr':
                 server = str(command[index]).replace("'", "")
                 server = server.replace('"', '')
                 input_error_check(server, journal)
+
                 PROFILE.dsuserver = server
                 PROFILE.save_profile(str(journal))
                 print("DSUserver successfully updated!")
@@ -186,7 +187,7 @@ def command_E(journal, command: list):
                 entry = ' '.join(entry)
                 entry = entry.replace("'", "")
                 entry = entry.replace('"', '')
-                user_post_error_check(entry, journal)
+                user_post_error_check(entry)
 
                 POST = post(entry=entry)
                 POST.set_entry
@@ -207,6 +208,9 @@ def command_E(journal, command: list):
                 PROFILE.save_profile(str(journal))
                 print("Selected post successfully deleted from profile!")
 
+            elif i == '-publish':
+                publish_from_file(journal)
+            
             elif i == 'Q':
                 exit()
 
@@ -350,9 +354,15 @@ def publish_from_file(journal):
     PROFILE = profile()
     PROFILE.load_profile(str(journal))
     port = 3021
-    server = PROFILE.dsuserver
-    username = PROFILE.username
-    password = PROFILE.password
-    bio = PROFILE.bio
-    message = PROFILE._posts[-1]['entry']
-    send(server, port, username, password, message, bio)
+    server = str(PROFILE.dsuserver)
+    username = str(PROFILE.username)
+    password = str(PROFILE.password)
+    bio = str(PROFILE.bio)
+    message = str(PROFILE._posts[-1]['entry'])
+
+    if send(server, port, username, password, message, bio):
+        print("Operation completed successfully!")
+        exit()
+    else:
+        print("Oops! Operation failed!")
+        exit()

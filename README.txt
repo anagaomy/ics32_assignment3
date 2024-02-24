@@ -22,12 +22,13 @@ The user input for admin mode in this program will take the following format:
 
 Available program commands:
 
-    'L' - List the contents of the user specified directory.
-    'C' - Create a new file in the specified directory.
-    'O' - Open an existing file of the type DSU
-    'D' - Delete the file.
-    'R' - Read the contents of a file.
-    'Q' - Quit the program.
+    'PO'    - Publish a post online
+    'C'     - Create a new file in the specified directory.
+    'O'     - Open an existing file of the type DSU
+    'L'     - List the contents of the user specified directory.
+    'D'     - Delete the file.
+    'R'     - Read the contents of a file.
+    'Q'     - Quit the program.
 
 
 Options of the 'L' command:
@@ -47,11 +48,13 @@ Options of the 'C' and 'O' command:
 
 'E' command feature:
 
+    -svr [SERVER IP ADDRESS]
     -usr [USERNAME]
     -pwd [PASSWORD]   
     -bio [BIO] 
     -addpost [NEW POST] 
     -delpost [ID] 
+    -publish
 
 
 'P' command feature:
@@ -62,5 +65,6 @@ Options of the 'C' and 'O' command:
     '-posts'    - Prints all posts stored in the profile object with their ID
     '-post'     - Prints post identified by ID
     '-all'      - Prints all content stored in the profile object
+    '-publish'  - Publish a post from a list of all entries
 
 When an error occurs, the program will inform the user by printing ‘ERROR’ and wait for additional input from the user.

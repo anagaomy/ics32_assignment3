@@ -1,0 +1,20 @@
+{
+    "dsuserver": "168.235.86.101",
+    "username": "BLACKPINK",
+    "password": "2016",
+    "bio": "blackpink in you area!!!",
+    "_posts": [
+        {
+            "entry": "kill this love",
+            "timestamp": 1708584979.443916
+        },
+        {
+            "entry": "Lovesick Girl",
+            "timestamp": 1708752982.699635
+        },
+        {
+            "entry": "PINK VENOM",
+            "timestamp": 1708753042.9165618
+        }
+    ]
+}
