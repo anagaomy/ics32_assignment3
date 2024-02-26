@@ -32,8 +32,15 @@ def send(server: str, port: int, username: str,
             print("Client succeffully connected to " + f"{server} on {port}")
 
             join_msg = ds_protocol.join(username, password)
-            client.sendall(join_msg.encode())
-            response = client.recv(8000).decode()
+
+            send = client.makefile('w')
+            recv = client.makefile('r')
+
+            send.write(join_msg + '\r\n')
+            send.flush()
+
+            response = recv.readline()
+
             _type, _msg, _token = ds_protocol.extract_json(response)
 
             if _type == "error":
@@ -43,20 +50,36 @@ def send(server: str, port: int, username: str,
             elif _type == "ok":
                 if message and not message == '' and not message.isspace():
                     post_msg = ds_protocol.post(_token, message)
-                    client.sendall(post_msg.encode())
-                    MSG = client.recv(8000).decode()
+
+                    send = client.makefile('w')
+                    recv = client.makefile('r')
+
+                    send.write(post_msg + '\r\n')
+                    send.flush()
+
+                    MSG = recv.readline()
+
                     msg = json.loads(MSG)['response']['message']
                     print(msg)
+
                 else:
                     print("ERROR! INVALID POST MESSAGE!")
                     return False
 
                 if bio and not bio == '' and not bio.isspace():
                     bio_msg = ds_protocol.bio(_token, bio)
-                    client.sendall(bio_msg.encode())
-                    MSG = client.recv(8000).decode()
+
+                    send = client.makefile('w')
+                    recv = client.makefile('r')
+
+                    send.write(bio_msg + '\r\n')
+                    send.flush()
+
+                    MSG = recv.readline()
+
                     msg = json.loads(MSG)['response']['message']
                     print(msg)
+
                 elif bio is None:
                     return True
                 else:
